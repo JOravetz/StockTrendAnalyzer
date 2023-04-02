@@ -45,6 +45,10 @@ To get help message, use the following command:
 python StockTrendAnalyzer.py --command help
 </pre>
 
+## Example Plot Image
+
+![Example Image](./example.png)
+
 ## License
 This project is licensed under the terms of the Apache V2 License.
 
