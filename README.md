@@ -36,7 +36,7 @@ The script generates a graph showing the cumulative daily percent price change, 
 To analyze data for stock symbol AAPL for the last 252 days, use the following command:
 
 <pre>
-python StockTrendAnalyzer.py --symbol AAPL --tail 252
+python StockTrendAnalyzer.py --symbol XOM --tail 252
 </pre>
 
 To get help message, use the following command:
