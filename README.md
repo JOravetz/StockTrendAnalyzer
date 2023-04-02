@@ -2,13 +2,15 @@
 A Python script that analyzes historical stock market data from Alpaca Markets to detect trends in stock prices. It can identify patterns that indicate buy or sell signals and uses a combination of signal processing and statistical analysis to generate visualizations of the data. This tool is designed to help traders identify potential trading opportunities and make informed investment decisions.
 
 ## Requirements
-Python 3.6 or later
-Alpaca account with API keys
-pandas_market_calendars package
-alpaca_trade_api package
-matplotlib package
-numpy package
-scipy package
+- Python 3.6 or later
+- Alpaca account with API keys
+- pandas_market_calendars package
+- alpaca_trade_api package
+- matplotlib package
+- numpy package
+- scipy package
+
+The Alpaca API keys should be environment variables, as shown in the config.py file.
 ## Installation
 Clone this repository
 Install the required packages: 
