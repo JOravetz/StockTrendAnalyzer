@@ -21,7 +21,6 @@ python StockTrendAnalyzer.py --symbol [symbol] --tail [tail] --window [window] -
 </pre>
 
 ## Arguments:
-- `--command`: the command to run (default: None)
 - `--symbol`: the stock symbol (required)
 - `--tail`: the tail value, i.e. the number of days to analyze (default: 252)
 - `--window`: the window value (default: round(tail // 22.90))
