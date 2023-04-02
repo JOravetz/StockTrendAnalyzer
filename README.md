@@ -14,7 +14,7 @@ Clone this repository
 Install the required packages: pip install pandas_market_calendars alpaca_trade_api matplotlib numpy scipy
 ## Usage
 <pre>
-python StockTrendAnalyzer.py --command [command] --symbol [symbol] --tail [tail] --window [window] --factor [factor] --plot [plot]
+python StockTrendAnalyzer.py --symbol [symbol] --tail [tail] --window [window] --factor [factor] --plot [plot]
 </pre>
 
 ## Arguments:
