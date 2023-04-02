@@ -47,3 +47,7 @@ python StockTrendAnalyzer.py --command help
 
 ## License
 This project is licensed under the terms of the Apache V2 License.
+
+## Disclaimer
+
+This project is for educational purposes only and should not be used to make financial decisions. The information provided by this tool is not intended to be relied upon for investment purposes and is not intended to be a substitute for professional financial advice. Trading in the stock market involves substantial risk, and you should always consult with a qualified financial advisor before making any investment decisions. The author of this project disclaims all liability for any direct or indirect damages arising from the use of this tool.
