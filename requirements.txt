@@ -1,0 +1,6 @@
+numpy
+pandas
+matplotlib
+pandas_market_calendars
+scipy
+alpaca_trade_api
