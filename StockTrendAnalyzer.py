@@ -294,7 +294,7 @@ def compute_circles(symbol, df, window, df_temp):
         sys.exit(0)
     return data_filter, final_min, final_max, first_derivative, df_temp
 
-percent_change_today = (current_price/df["close"].iloc[-2] - 1.0) * hundred
+percent_change_today = df["daily_returns"].iloc[-1]
 
 df_temp = pd.DataFrame(
     index=[symbol],
