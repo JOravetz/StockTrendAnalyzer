@@ -127,14 +127,32 @@ if current_price != last_close:
     df.loc[last_index, 'close'] = current_price
 
 hundred = 100.0
-# Calculate the percent change and convert it to cumulative percent change
-df['cumulative_pct_change'] = ((df['close'].pct_change() + 1).cumprod() - 1) * hundred
+# Calculate the cumulative percentage change
+df['cumulative_pct_change'] = (df['close'].pct_change() + 1).cumprod().fillna(1) * 100 - 100
 
-# Calculate daily returns in percent change
-df['daily_returns'] = df['close'].pct_change() * hundred
+# Calculate the daily returns
+df['daily_returns'] = df['close'].pct_change() * 100
 
-# Calculate the z-score (normalized standard deviation) for the daily returns
-df['daily_returns_z_score'] = (df['daily_returns'] - df['daily_returns'].mean()) / df['daily_returns'].std()
+# Calculate the z-score of daily returns
+df['daily_returns_z_score'] = df['daily_returns'].transform(lambda x: (x - x.mean()) / x.std(ddof=0))
+
+# convert to cumulative percent-change
+data = df.close.values
+ns = len(data)
+
+data_perc = np.zeros(ns)
+data_perc[0] = 0.0
+hundred = 100.0
+for i in range(1, ns):
+    last = data[i - 1]
+    data_perc[i] = data_perc[i - 1] + ((data[i] - last) / last) * hundred
+df["cumulative_pct_change"] = data_perc
+
+df["daily_returns"] = df["close"].pct_change() * hundred
+daily_returns = df.daily_returns.values
+daily_returns[0] = 0.0
+std = np.std(daily_returns)
+df["daily_returns_z_score"] = daily_returns / std
 
 def compute_avo_attributes(data):
     num_samples = len(data)
