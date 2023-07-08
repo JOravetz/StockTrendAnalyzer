@@ -56,6 +56,7 @@ def compute_avo_attributes(data):
     z_array = np.linspace(1, num_samples, num_samples)
     trans_matrix = np.vstack([z_array, np.ones(num_samples)]).T
     gradient, intercept = np.linalg.lstsq(trans_matrix, data, rcond=None)[0]
+
     return (gradient, intercept)
 
 
@@ -64,6 +65,7 @@ def group_consecutives(data, stepsize=1):
 
 
 def compute_trend_and_filter(num_samples, data_percent, window):
+
     gradient = (data_percent[-1] - data_percent[0]) / (num_samples - 1)
     intercept = data_percent[0]
 
@@ -84,6 +86,7 @@ def compute_trend_and_filter(num_samples, data_percent, window):
 
 
 def calculate_velocity(data_filter):
+
     first_derivative = signal.savgol_filter(
         data_filter, delta=1, window_length=3, polyorder=2, deriv=1
     )
@@ -131,7 +134,7 @@ def calculate_min_max(gap_array, mina_, maxa_):
     return final_min, final_max
 
 
-def calculate_action_points(gap_min, gap_max, num_samples, factor, first_derivative):
+def calculate_action_points(num_samples, factor, first_derivative):
     (min_,) = np.where(first_derivative < -factor)
     (max_,) = np.where(first_derivative > factor)
 
@@ -194,37 +197,9 @@ def compute_circles(symbol, df, window, factor, current_price, df_temp):
         # using defined calculate_velocity
         velocity, first_derivative = calculate_velocity(data_filter)
 
-        (min_,) = np.where(velocity < -factor)
-        (max_,) = np.where(velocity > factor)
-
-        gap_min = group_consecutives(min_)
-        gap_max = group_consecutives(max_)
-
-        gap_array = []
-        for i in range(0, len(gap_min)):
-            if len(gap_min[i]) > 0:
-                gap_array = np.append(gap_array, np.min(gap_min[i]))
-                gap_array = np.append(gap_array, np.max(gap_min[i]))
-        for i in range(0, len(gap_max)):
-            if len(gap_max[i]) > 0:
-                gap_array = np.append(gap_array, np.min(gap_max[i]))
-                gap_array = np.append(gap_array, np.max(gap_max[i]))
-
-        gap_array = np.append(gap_array, 1)
-        gap_array = np.append(gap_array, num_samples)
-        gap_array = np.unique(np.sort(gap_array).astype(int))
-        diff_array = np.diff(np.sign(velocity))
-        (mina_,) = np.where(diff_array < 0)
-        (maxa_,) = np.where(diff_array > 0)
-        final_min = final_max = []
-        last = "None"
-
-        # using defined calculate_min_max
-        final_min, final_max = calculate_min_max(gap_array, mina_, maxa_)
-
         # using defined calculate_action_points
         final_min, final_max, isamp, action = calculate_action_points(
-            gap_min, gap_max, num_samples, factor, velocity
+            num_samples, factor, first_derivative
         )
 
         isamp_ago = int(num_samples - isamp)

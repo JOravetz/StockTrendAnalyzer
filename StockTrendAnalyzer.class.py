@@ -13,27 +13,16 @@ from matplotlib import style, gridspec
 from alpaca_trade_api.rest import REST, TimeFrame
 from config import API_KEY_ID, SECRET_KEY_ID, BASE_URL
 
-from helper_functions import (
-    find_co_name,
-    nyse_trading_days_dataframe,
-    fetch_alpaca_data,
-    compute_avo_attributes,
-    group_consecutives,
-    compute_trend_and_filter,
-    calculate_velocity,
-    calculate_min_max,
-    calculate_action_points,
-    compute_circles,
-    update_current_price,
-    calculate_returns,
-    convert_to_cumulative_percent_change,
-    plot_graph,
+from helper_classes import (
+    StockHelper,
+    AvoAttributesCalculator,
+    CircleCalculator,
+    PriceCalculator,
+    Plotter,
 )
 
 # Magic number replaced with a constant
 WINDOW_RATIO = 22.90
-
-rest_api = REST(API_KEY_ID, SECRET_KEY_ID, BASE_URL)
 
 style.use("dark_background")
 
@@ -41,6 +30,19 @@ style.use("dark_background")
 pd.set_option("display.max_rows", None)
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", None)
+
+API_KEY_ID    = os.getenv("APCA_API_KEY_ID")
+SECRET_KEY_ID = os.getenv("APCA_API_SECRET_KEY")
+BASE_URL      = os.getenv("APCA_API_BASE_URL")
+
+rest_api = REST(API_KEY_ID, SECRET_KEY_ID, BASE_URL)
+
+# Create instances of the classes
+stock_helper = StockHelper(rest_api)
+avo_attributes_calculator = AvoAttributesCalculator()
+circle_calculator = CircleCalculator()
+price_calculator = PriceCalculator()
+plotter = Plotter()
 
 # Set up argparse for command line arguments
 parser = argparse.ArgumentParser(
@@ -87,14 +89,14 @@ if symbol is None:
     raise ValueError("Must enter symbol eg: TQQQ")
 
 # Find company name for the given stock symbol
-co_name = find_co_name(symbol)
+co_name = stock_helper.find_co_name(symbol)
 
 # Generate DataFrame with NYSE trading days for the specified tail length
-df, start_date, end_date, ndays = nyse_trading_days_dataframe(tail)
+df, start_date, end_date, ndays = stock_helper.nyse_trading_days_dataframe(tail)
 
 # Fetch historical data for the given symbol from Alpaca API
-historical_data = fetch_alpaca_data(
-    symbol, start_date, end_date, tail, rest_api
+historical_data = stock_helper.fetch_alpaca_data(
+    symbol, start_date, end_date, tail
 )
 
 # Combine the df and bars DataFrames, keeping only rows with values in the close column
@@ -111,9 +113,9 @@ last_index = df.index[-1]
 last_close = df.loc[last_index, "close"]
 
 # Update the DataFrame with current price, calculate returns and convert to cumulative percent change
-df = update_current_price(df, current_price, last_close, last_index)
-df = calculate_returns(df)
-df = convert_to_cumulative_percent_change(df)
+df = price_calculator.update_current_price(df, current_price, last_close, last_index)
+df = price_calculator.calculate_returns(df)
+df = price_calculator.convert_to_cumulative_percent_change(df)
 
 # Set the first daily return to zero
 daily_returns = df.daily_returns.values
@@ -149,7 +151,7 @@ df_temp = pd.DataFrame(
     final_max,
     df["velocity"],
     df_temp,
-) = compute_circles(symbol, df, window, factor, current_price, df_temp)
+) = circle_calculator.compute_circles(symbol, df, window, factor, current_price, df_temp)
 
 # Print the last 10 rows of the DataFrame and the df_temp DataFrame
 print(df.tail(10))
@@ -160,7 +162,7 @@ print(df_temp)
 df["zero"] = 0.0
 
 # Plot the graph based on the computed data
-plot_graph(
+plotter.plot_graph(
     df,
     final_min,
     final_max,
