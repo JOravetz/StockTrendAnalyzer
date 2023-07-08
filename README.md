@@ -1,6 +1,8 @@
 # StockTrendAnalyzer
 A Python script that analyzes historical stock market data from Alpaca Markets to detect trends in stock prices. It can identify patterns that indicate buy or sell signals and uses a combination of signal processing and statistical analysis to generate visualizations of the data. This tool is designed to help traders identify potential trading opportunities and make informed investment decisions.
 
+The code has been recently updated to classes, methods, and functions for more re-usable and efficient code, so new users can better follow the processing logic.
+
 ## Requirements
 - Python 3.6 or later
 - Alpaca account with API keys
@@ -34,16 +36,20 @@ python StockTrendAnalyzer.py --symbol [symbol] --tail [tail] --window [window] -
 The script generates a graph showing the cumulative daily percent price change, close prices, and buy/sell signals for the specified stock symbol.
 
 ## Example Usage
-To analyze data for stock symbol AAPL for the last 252 days, use the following command:
+To analyze data for stock symbol AAPL for the last 252 days, use the following commands:
 
 <pre>
-python StockTrendAnalyzer.py --symbol XOM --tail 252
+python StockTrendAnalyzer.py --symbol TSLA
+</pre>
+or
+<pre>
+python StockTrendAnalyzer.class.py --symbol TSLA
 </pre>
 
 To get help message, use the following command:
 
 <pre>
-python StockTrendAnalyzer.py --command help
+python StockTrendAnalyzer.py --help
 </pre>
 
 ## Example Plot Image
