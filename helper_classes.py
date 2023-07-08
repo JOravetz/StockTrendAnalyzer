@@ -1,4 +1,5 @@
 import sys
+import csv
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -14,14 +15,13 @@ class StockHelper:
         self.rest_api = rest_api
 
     @staticmethod
-    def find_co_name(symbol, file_path="tickers.txt"):
-        try:
-            with open(file_path, "r") as file:
-                for line in file:
-                    if symbol in line:
-                        return line.split("|")[1].strip()
-        except Exception as e:
-            return "N/A"
+    def find_co_name(target):
+        with open('tickers.txt', 'r') as file:
+            reader = csv.reader(file, delimiter='|')
+            for row in reader:
+                if row[0] == target:
+                    return row[1]
+        return "N/A"
 
     @staticmethod
     def nyse_trading_days_dataframe(tail: int) -> pd.DataFrame:
