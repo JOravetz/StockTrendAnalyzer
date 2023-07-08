@@ -1,7 +1,7 @@
 # StockTrendAnalyzer
 A Python script that analyzes historical stock market data from Alpaca Markets to detect trends in stock prices. It can identify patterns that indicate buy or sell signals and uses a combination of signal processing and statistical analysis to generate visualizations of the data. This tool is designed to help traders identify potential trading opportunities and make informed investment decisions.
 
-The code has been recently updated to classes, methods, and functions for more re-usable and efficient code, so new users can better follow the processing logic.
+The code was recently updated to classes, methods, and functions for more re-usable and efficient code, so new users can better follow the processing logic.
 
 ## Requirements
 - Python 3.6 or later
