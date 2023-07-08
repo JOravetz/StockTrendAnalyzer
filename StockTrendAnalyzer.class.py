@@ -107,9 +107,9 @@ df.dropna(axis=0, inplace=True)
 
 # Fetch the current price
 current_price = rest_api.get_latest_trade(symbol).price
-ns = df.shape[0]
-df.loc[end_date] = current_price
-df = df.tail(ns)
+if df['close'].iloc[-1] != current_price:
+    df.loc[end_date] = current_price
+df = df.tail(tail)
 
 # Get the last row's index and close value
 # last_index = df.index[-1]
