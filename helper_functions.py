@@ -94,7 +94,8 @@ def calculate_velocity(data_filter):
     mean = np.mean(first_derivative)
     std = np.std(first_derivative)
     a = (first_derivative - mean) / std
-    velocity = a / np.max(a)
+    first_derivative = a / np.max(a)
+    velocity = first_derivative
 
     return first_derivative, velocity
 
@@ -155,7 +156,11 @@ def calculate_action_points(num_samples, factor, first_derivative):
     gap_array = np.append(gap_array, num_samples)
     gap_array = np.unique(np.sort(gap_array).astype(int))
 
-    final_min, final_max = calculate_min_max(gap_array, min_, max_)
+    diff_array = np.diff(np.sign(first_derivative))
+    (mina_,) = np.where(diff_array < 0)
+    (maxa_,) = np.where(diff_array > 0)
+
+    final_min, final_max = calculate_min_max(gap_array, mina_, maxa_)
 
     isamp = 0
     action = "None"
@@ -251,6 +256,11 @@ def calculate_returns(df):
 
     # Calculate the daily returns
     df["daily_returns"] = df["close"].pct_change() * 100.0
+    df["daily_returns"].iloc[0] = 0.0
+    daily_returns = df["daily_returns"].values
+    std = np.std(daily_returns)
+    std_dev = daily_returns / std
+    df["std-dev"] = std_dev
 
     return df
 

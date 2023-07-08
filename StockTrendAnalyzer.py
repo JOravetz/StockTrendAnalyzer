@@ -105,13 +105,17 @@ df.dropna(axis=0, inplace=True)
 
 # Fetch the current price
 current_price = rest_api.get_latest_trade(symbol).price
+ns = df.shape[0]
+df.loc[end_date] = current_price
+df = df.tail(ns)
 
 # Get the last row's index and close value
-last_index = df.index[-1]
-last_close = df.loc[last_index, "close"]
+# last_index = df.index[-1]
+# last_close = df.loc[last_index, "close"]
 
 # Update the DataFrame with current price, calculate returns and convert to cumulative percent change
-df = update_current_price(df, current_price, last_close, last_index)
+# df = update_current_price(df, current_price, last_close, last_index)
+
 df = calculate_returns(df)
 df = convert_to_cumulative_percent_change(df)
 
