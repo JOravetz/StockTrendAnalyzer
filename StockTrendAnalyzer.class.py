@@ -50,27 +50,27 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("--command", type=str, help="The command to run")
 parser.add_argument(
-    "--symbol", type=str, required=True, help="The stock symbol"
+    "-s", "--symbol", type=str, required=True, help="The stock symbol"
 )
 parser.add_argument(
-    "--tail",
+    "-t", "--tail",
     type=int,
     default=252,
     nargs="?",
     help="The tail value (default: 252)",
 )
 parser.add_argument(
-    "--window", type=int, default=None, nargs="?", help="The window value"
+    "-w", "--window", type=int, default=None, nargs="?", help="The window value"
 )
 parser.add_argument(
-    "--factor",
+    "-f", "--factor",
     type=float,
     default=0.200,
     nargs="?",
     help="The factor value (default: 0.20)",
 )
 parser.add_argument(
-    "--plot",
+    "-p", "--plot",
     type=int,
     default=1,
     nargs="?",
@@ -86,7 +86,7 @@ factor = args.factor
 plot_switch = args.plot
 
 if symbol is None:
-    raise ValueError("Must enter symbol eg: TQQQ")
+    raise ValueError("Must enter symbol eg: AAPL")
 
 # Find company name for the given stock symbol
 co_name = stock_helper.find_co_name(symbol)
@@ -110,13 +110,6 @@ current_price = rest_api.get_latest_trade(symbol).price
 if df['close'].iloc[-1] != current_price:
     df.loc[end_date] = current_price
 df = df.tail(tail)
-
-# Get the last row's index and close value
-# last_index = df.index[-1]
-# last_close = df.loc[last_index, "close"]
-
-# Update the DataFrame with current price, calculate returns and convert to cumulative percent change
-# df = price_calculator.update_current_price(df, current_price, last_close, last_index)
 
 df = price_calculator.calculate_returns(df)
 df = price_calculator.convert_to_cumulative_percent_change(df)
